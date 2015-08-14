@@ -68,7 +68,6 @@ define nginx::resource::upstream (
   }
 
   concat { "${::nginx::config::conf_dir}/conf.d/${name}-upstream.conf":
-    ensure => $ensure_real,
     notify => Class['::nginx::service'],
   }
 
@@ -77,6 +76,7 @@ define nginx::resource::upstream (
     target  => "${::nginx::config::conf_dir}/conf.d/${name}-upstream.conf",
     order   => '10',
     content => template('nginx/conf.d/upstream_header.erb'),
+    ensure => $ensure_real,
   }
 
   if $members != undef {
@@ -85,6 +85,7 @@ define nginx::resource::upstream (
       target  => "${::nginx::config::conf_dir}/conf.d/${name}-upstream.conf",
       order   => '50',
       content => template('nginx/conf.d/upstream_members.erb'),
+    ensure => $ensure_real,
     }
   } else {
     # Collect exported members:
@@ -95,5 +96,6 @@ define nginx::resource::upstream (
     target  => "${::nginx::config::conf_dir}/conf.d/${name}-upstream.conf",
     order   => '90',
     content => "}\n",
+    ensure => $ensure_real,
   }
 }
